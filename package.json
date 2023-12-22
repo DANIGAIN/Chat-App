@@ -11,6 +11,7 @@
   "dependencies": {
     "@nextui-org/button": "^2.0.26",
     "@nextui-org/react": "^2.2.9",
+    "axios": "^1.6.2",
     "firebase": "^10.7.1",
     "next": "14.0.4",
     "react": "^18",
