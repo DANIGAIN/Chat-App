@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from 'react'
 import { serverTimestamp, Timestamp } from 'firebase/firestore'
-import { redirect } from 'next/navigation'
+import { redirect, useRouter, useSearchParams } from 'next/navigation'
 import { UserAuth } from '@/context/AuthContext'
 import axios from 'axios';
 import Message from '../component/Message'
@@ -13,6 +13,9 @@ function page() {
   const { user, isLoading } = UserAuth()
   const  messageEndRef = useRef();
   const db = getDatabase()
+  const serachParams = useSearchParams();
+  const router = useRouter()
+  
       
   if (!user && !isLoading) redirect('/')
   const handelSubmit = async (e) => {
@@ -24,6 +27,7 @@ function page() {
       img: photoURL,
       text: value,
       createdAt: Timestamp.now(),
+      rid: serachParams.get("id")
     }
 
     const res = await axios.post(`${process.env.NEXT_PUBLIC_FIREBASE_BASE_URL}/messages.json`, obj, {
@@ -37,9 +41,9 @@ function page() {
 
   }
   const scrolltoButtom = () =>{
-    messageEndRef.current.scrollIntoView({behavios:'smooth'})
+       messageEndRef.current.scrollIntoView({behavios:'smooth'})
   }
-  useEffect(()=>scrolltoButtom,[messages])
+  useEffect(()=> messageEndRef.current && scrolltoButtom,[messages])
 
   useEffect(() => {
     const messageRef = ref(db,'messages')
@@ -54,15 +58,26 @@ function page() {
     return () => getMessage()
   }, [])
 
+  useEffect(()=>{
+    if(!serachParams.get("id")){
+      router.push('/UserList')
+    }
+
+  },[])
+
+  
   return (
     <>
+    
       <div >
         <div className="chat-area flex-1 flex flex-col">
+       
           <div className="flex-3">
             <h2 className="text-xl py-1 mb-8 border-b-2 border-gray-200">
               Chatting with <b>Mercedes Yemelyan</b>
             </h2>
           </div>
+        
           <div className="messages flex-1 overflow-auto">
             { user &&  messages.map((data) => (
               <Message key={data.id} data={data} user={user} />

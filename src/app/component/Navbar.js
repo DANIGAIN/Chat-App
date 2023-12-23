@@ -1,9 +1,11 @@
 import { UserAuth } from '@/context/AuthContext'
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 
 function Navbar() {
   const { user, googleSignIn, logOut } = UserAuth();
   const [show, setShow] = useState(false)
+  const router = useRouter()
 
   const signUpHandler = async () => {
     try {
@@ -30,6 +32,7 @@ function Navbar() {
                 className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                 aria-controls="mobile-menu"
                 aria-expanded="false"
+                
               >
                 <span className="absolute -inset-0.5" />
                 <span className="sr-only">Open main menu</span>
@@ -85,14 +88,15 @@ function Navbar() {
                 <div className="flex space-x-4">
                   {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" */}
                   <a
-                    href="#"
+      
                     className="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium"
                     aria-current="page"
+                    onClick={()=>router.push('/chat')}
                   >
                     Chat
                   </a>
                   <a
-                    href="#"
+                     onClick={()=>router.push('/UserList')}
                     className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                   >
                     User List

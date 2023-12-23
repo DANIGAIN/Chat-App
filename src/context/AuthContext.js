@@ -1,6 +1,7 @@
 import {useContext , createContext, useState, useEffect} from "react";
 import {auth} from '@/firebase/config'
 import {signInWithPopup ,GoogleAuthProvider ,signOut, onAuthStateChanged} from 'firebase/auth'
+import axios from "axios";
 
 const AuthContext = createContext();
 
@@ -10,8 +11,13 @@ export const  AuthContextProvider = ({children}) =>{
 
     const googleSignIn = () =>{
         const Provider = new  GoogleAuthProvider();
-        signInWithPopup(auth ,Provider)
-
+        signInWithPopup(auth ,Provider).then((res)=>{
+            axios.post(`${process.env.NEXT_PUBLIC_FIREBASE_BASE_URL}/users.json`, res.user, {
+                headers: {
+                  ContentType: 'application/json'
+                }
+              })
+        })
     }
     const logOut = () =>{
         signOut(auth);
